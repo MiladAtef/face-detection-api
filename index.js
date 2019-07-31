@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
+const cors=require('cors');
 const app = express();
 let PORT = process.env.PORT || 3000;
 
@@ -27,6 +28,7 @@ const database = {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors());
 
 //root route
 app.get('/', (req, res) => {
@@ -39,7 +41,7 @@ app.post('/signin', (req, res) => {
 		req.body.email === database.users[0].email &&
 		req.body.password === database.users[0].password
 	) {
-		res.json('success');
+		res.json(database.users[0]);
 	} else {
 		res.status(400).json('error logging in');
 	}
@@ -47,10 +49,9 @@ app.post('/signin', (req, res) => {
 
 //register route
 app.post('/register', (req, res) => {
-	const { name, email, password } = req.body;
+	const { name, email} = req.body;
 	database.users.push({
 		id: '125',
-		password,
 		name,
 		email,
 		entries: 0,
