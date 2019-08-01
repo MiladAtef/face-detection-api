@@ -14,12 +14,16 @@ let PORT = process.env.PORT || 3000;
 
 const db=knex({
 	client:'pg',
-	connection: 'postgres://postgres:test@localhost:5432/smartbrain'
+	connection:{
+		connectString:process.env.DATABASE_URL,
+		ssl:true
+	} 
 });
 
 app.use(cors());
 app.use(bodyParser.json());
 
+app.get('/',(req,res)=>res.send('it is working!'))
 app.post('/signin',signin.handleSignin(db,bcrypt));
 app.post('/register', register.handleRegister(db,bcrypt));
 app.get('/profile/:id',profile.handleGetProfile(db));
